@@ -1,0 +1,3 @@
+# kalkulacka
+
+Projekt Kalkulačka
