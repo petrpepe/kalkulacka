@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #202124;
+    color: #e8eaed;
+}
+
+.vysledek, .tlacitka {
+    display: grid;
+    max-width: 500px;
+    margin: 5px;
+}
+
+.vysledek > input {
+    background-color: #202124;
+    border: 1px solid #3c4043;
+    color: #e8eaed;
+    padding: 10px;
+    text-align: right;
+    font-size: 18pt;
+    border-radius: 10px;
+}
+
+.tlacitka {
+    margin-top: 10px;
+    grid-template-columns: repeat(4, auto);
+    gap: 5px;
+}
+
+.tlacitka > button {
+    display: inline-block;
+    background-color: #3c4043;
+    border-radius: 5px;
+    height: 3em;
+    border: none;
+    outline: none;
+    box-shadow: 0 5px #999;
+    margin-bottom: 5px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.tlacitka > button:hover {
+    background-color: #525558;
+}
+
+.tlacitka > button:active {
+    background-color: #303134;
+    box-shadow: 0 3px #666;
+    transform: translateY(2px);
+}
