@@ -33,9 +33,17 @@ for (const key in tlacitka) {
             tlacitko.addEventListener("click", () => {
                 // V inputu je nějaká hodnota a hodnota v inputu nekončí +-*/
                 if (vysledek.value != "" &&
-                    !symboly.includes(vysledek.value.charAt(vysledek.value.length - 1))) {
-                    vysledek.value += tlacitko.textContent
-                } else if (vysledek.value == "") vysledek.value = "0."
+                    (vysledek.value.lastIndexOf(".") < vysledek.value.lastIndexOf("+") ||
+                    vysledek.value.lastIndexOf(".") < vysledek.value.lastIndexOf("-") ||
+                    vysledek.value.lastIndexOf(".") < vysledek.value.lastIndexOf("×") ||
+                    vysledek.value.lastIndexOf(".") < vysledek.value.lastIndexOf("÷")) && 
+                    (vysledek.value.charAt(vysledek.value.length-1) != "(" ||
+                    vysledek.value.charAt(vysledek.value.length-1) != ")")) {
+                    if(!symboly.includes(vysledek.value.charAt(vysledek.value.length - 1))) {
+                    vysledek.value += tlacitko.textContent }
+                    else vysledek.value += "0."
+                } else if(vysledek.value == "") vysledek.value = "0."
+                else vysledek.value += tlacitko.textContent
             })
         }
         // Pokud tlačítko má atribut data-operation s hodnotou calculate (vypočti) tak vypočítá a napíše výsledek
@@ -56,11 +64,12 @@ for (const key in tlacitka) {
             })
         }
 
-        else if(tlacitko.getAttribute("data-operation") === "clear-one") {
-            // Jeden click odstraní poslední symbol
-            tlacitko.addEventListener("click", () => {
-                vysledek.value = vysledek.value.slice(0, -1)
-            })
+        else if(tlacitko.getAttribute("data-operation") === "bracketOpen") {
+            
+        }
+
+        else if(tlacitko.getAttribute("data-operation") === "bracketClose") {
+            
         }
     }
 }
