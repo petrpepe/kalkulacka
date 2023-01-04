@@ -11,6 +11,7 @@ const operace = ["adding", "subracting", "multiplying", "dividing"]
 
 let jeDesetinnaTecka = false
 let jeZnamenko = false
+const zavorkyPocet = {otviraci: 0, uzaviraci: 0}
 
 //Psaní do výsledku
 for (const key in tlacitka) {
@@ -20,13 +21,8 @@ for (const key in tlacitka) {
         // Tlačítka co nemají atribut data-operation budou psát do inputu (čísla)
         if (!tlacitko.hasAttribute("data-operation")) {
             tlacitko.addEventListener("click", () => {
-                if (vysledek.value.charAt(vysledek.value.length - 1) == 0 && jeZnamenko) {
-                    vysledek.value = vysledek.value.substring(0, vysledek.value.length - 2)
-                    vysledek.value += tlacitko.textContent
-                    jeZnamenko = false
-                } else {
-                    vysledek.value += tlacitko.textContent
-                }
+                vysledek.value += tlacitko.textContent
+                jeZnamenko = false
             })
         }
         // Pokud tlačítko má atribut data-operation s hodnotou adding (sčítání) tak napíše plus
@@ -60,7 +56,9 @@ for (const key in tlacitka) {
         // Pokud tlačítko má atribut data-operation s hodnotou calculate (vypočti) tak vypočítá a napíše výsledek
         else if(tlacitko.getAttribute("data-operation") === "calculate") {
             tlacitko.addEventListener("click", () => {
-                vysledek.value = eval(vysledek.value.replace("×", "*").replace("÷", "/").replace(",", "."))
+                if (zavorkyPocet.otviraci == zavorkyPocet.uzaviraci) {
+                    vysledek.value = eval(vysledek.value.replace("×", "*").replace("÷", "/").replace(",", "."))
+                }
             })
         }
         // Tlačítko AC vyčistí input
@@ -76,11 +74,26 @@ for (const key in tlacitka) {
         }
 
         else if(tlacitko.getAttribute("data-operation") === "bracketOpen") {
-            
+            tlacitko.addEventListener("click", () => {
+                if (vysledek.value.charAt(vysledek.value-1) != "." && (jeZnamenko || vysledek.value == "")) {
+                    vysledek.value += "("
+                    zavorkyPocet.otviraci++
+                }
+            })
         }
 
         else if(tlacitko.getAttribute("data-operation") === "bracketClose") {
-            
+            tlacitko.addEventListener("click", () => {
+                if (vysledek.value.charAt(vysledek.value-1) != "." && !jeZnamenko &&
+                zavorkyPocet.uzaviraci < zavorkyPocet.otviraci) {
+                    vysledek.value += ")"
+                    zavorkyPocet.uzaviraci++
+                }
+            })
         }
+
+        tlacitko.addEventListener("click", () => {
+            vysledek.focus()
+        })
     }
 }
