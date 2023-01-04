@@ -9,6 +9,9 @@ const vysledek = document.querySelector(".vysledek").querySelector("input")
 const symboly = "+-×÷.,"
 const operace = ["adding", "subracting", "multiplying", "dividing"]
 
+let jeDesetinnaTecka = false
+let jeZnamenko = false
+
 //Psaní do výsledku
 for (const key in tlacitka) {
     if (Object.hasOwnProperty.call(tlacitka, key)) {
@@ -16,34 +19,42 @@ for (const key in tlacitka) {
         
         // Tlačítka co nemají atribut data-operation budou psát do inputu (čísla)
         if (!tlacitko.hasAttribute("data-operation")) {
-            tlacitko.addEventListener("click", () => vysledek.value += tlacitko.textContent)
+            tlacitko.addEventListener("click", () => {
+                if (vysledek.value.charAt(vysledek.value.length - 1) == 0 && jeZnamenko) {
+                    vysledek.value = vysledek.value.substring(0, vysledek.value.length - 2)
+                    vysledek.value += tlacitko.textContent
+                    jeZnamenko = false
+                } else {
+                    vysledek.value += tlacitko.textContent
+                }
+            })
         }
         // Pokud tlačítko má atribut data-operation s hodnotou adding (sčítání) tak napíše plus
         else if(operace.includes(tlacitko.getAttribute("data-operation"))) {
             tlacitko.addEventListener("click", () => {
-                // V inputu je nějaká hodnota a hodnota v inputu nekončí +-*/
-                if (vysledek.value != "" &&
-                    !symboly.includes(vysledek.value.charAt(vysledek.value.length - 1))) {
+                if (vysledek.value != "" && !jeZnamenko) {
                     vysledek.value += tlacitko.textContent
+                    jeDesetinnaTecka = false
+                    jeZnamenko = true
                 }
             })
         }
         // Desetinná tečka
         else if(tlacitko.getAttribute("data-operation") === "decimal") {
             tlacitko.addEventListener("click", () => {
-                // V inputu je nějaká hodnota a hodnota v inputu nekončí +-*/
-                if (vysledek.value != "" &&
-                    (vysledek.value.lastIndexOf(".") < vysledek.value.lastIndexOf("+") ||
-                    vysledek.value.lastIndexOf(".") < vysledek.value.lastIndexOf("-") ||
-                    vysledek.value.lastIndexOf(".") < vysledek.value.lastIndexOf("×") ||
-                    vysledek.value.lastIndexOf(".") < vysledek.value.lastIndexOf("÷")) && 
+                if (vysledek.value != "" && !jeDesetinnaTecka &&
                     (vysledek.value.charAt(vysledek.value.length-1) != "(" ||
                     vysledek.value.charAt(vysledek.value.length-1) != ")")) {
-                    if(!symboly.includes(vysledek.value.charAt(vysledek.value.length - 1))) {
-                    vysledek.value += tlacitko.textContent }
-                    else vysledek.value += "0."
-                } else if(vysledek.value == "") vysledek.value = "0."
-                else vysledek.value += tlacitko.textContent
+                    if(!jeZnamenko) {
+                        vysledek.value += tlacitko.textContent 
+                    } else {
+                        vysledek.value += "0."
+                    }
+                    jeZnamenko = false
+                } else if(vysledek.value == "") {
+                    vysledek.value = "0."
+                }
+                jeDesetinnaTecka = true
             })
         }
         // Pokud tlačítko má atribut data-operation s hodnotou calculate (vypočti) tak vypočítá a napíše výsledek
