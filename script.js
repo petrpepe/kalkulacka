@@ -57,7 +57,7 @@ for (const key in tlacitka) {
         else if(tlacitko.getAttribute("data-operation") === "calculate") {
             tlacitko.addEventListener("click", () => {
                 if (zavorkyPocet.otviraci == zavorkyPocet.uzaviraci) {
-                    vysledek.value = eval(vysledek.value.replace("×", "*").replace("÷", "/").replace(",", "."))
+                    vysledek.value = eval(vysledek.value.replace(/×/g, "*").replace(/÷/g, "/").replace(/\,/g, "."))
                 }
             })
         }
